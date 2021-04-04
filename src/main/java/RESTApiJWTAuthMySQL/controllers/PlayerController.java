@@ -1,28 +1,23 @@
 package RESTApiJWTAuthMySQL.controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
+import RESTApiJWTAuthMySQL.dto.PlayerModelAssembler;
+import RESTApiJWTAuthMySQL.exceptions.PlayerNotFoundException;
+import RESTApiJWTAuthMySQL.model.Player;
+import RESTApiJWTAuthMySQL.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import RESTApiJWTAuthMySQL.model.Player;
-import RESTApiJWTAuthMySQL.repositories.PlayerRepository;
-import RESTApiJWTAuthMySQL.exceptions.PlayerNotFoundException;
-import RESTApiJWTAuthMySQL.dto.PlayerModelAssembler;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+//import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 //@RequestMapping("/")
@@ -51,7 +46,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/players/{id}") 
-	public EntityModel<Player> one(@PathVariable Long playerId) {
+	public EntityModel<Player> one(@PathVariable("id") Long playerId) {
 
 	  Player player = repository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 
