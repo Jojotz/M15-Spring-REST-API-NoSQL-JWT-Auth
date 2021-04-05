@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,38 +37,42 @@ public class PlayerController {
 	    this.repository = repository;
 	    this.assembler = assembler;
 	}
-	
-	//@Autowired
-	//PlayerService playerService;
 		
 	@GetMapping("/players/")
 	public CollectionModel<EntityModel<Player>> all() {
 
-	  List<EntityModel<Player>> players = repository.findAll().stream().map
-			  (assembler::toModel).collect(Collectors.toList());
+		List<EntityModel<Player>> players = repository.findAll().stream().map(assembler::toModel).collect(Collectors.toList());
 
-	  return CollectionModel.of(players, linkTo(methodOn(PlayerController.class).all()).withSelfRel());
+		return CollectionModel.of(players, linkTo(methodOn(PlayerController.class).all()).withSelfRel());
 	}
 	
-	@GetMapping("/players/{id}") 
+	@GetMapping("/players/{playerId}") 
 	public EntityModel<Player> one(@PathVariable Long playerId) {
 
-	  Player player = repository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
+		Player player = repository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 
-	  return assembler.toModel(player);
+		return assembler.toModel(player);
 	}
 	
 	@PostMapping(path="/players", consumes="application/json") 
-	public ResponseEntity<?> createNewPlayer(@RequestBody Player newPlayer) {
+	public ResponseEntity<?> newPlayer(@RequestBody Player newPlayer) {
+	
+		if (newPlayer.getPlayerName() == null || newPlayer.getPlayerName() == "") {
+			newPlayer.setPlayerName("ANÒNIM");
 
-	  EntityModel<Player> entityModel = assembler.toModel(repository.save(newPlayer));
+		} else if (repository.findByPlayerName(newPlayer.getPlayerName()).isPresent()) {
+			
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+			
+		EntityModel<Player> entityModel = assembler.toModel(repository.save(newPlayer));
 
-	  return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	  
 	}		 
 	
 	
-	@PutMapping("/players/{id}")
+	@PutMapping("/players/{playerId}")
 	public ResponseEntity<?> replacePlayer(@RequestBody Player newPlayer, @PathVariable Long playerId) {
 
 		Player updatedPlayer = repository.findById(playerId) //
@@ -88,7 +92,7 @@ public class PlayerController {
 	      .body(entityModel);
 	}
 	
-	@DeleteMapping("/players/{id}")
+	@DeleteMapping("/players/{playerId}")
 	public ResponseEntity<?> deleteEmployee(@PathVariable Long playerId) {
 
 		  repository.deleteById(playerId);
@@ -96,18 +100,4 @@ public class PlayerController {
 		  return ResponseEntity.noContent().build();
 	}
 	
-	
-	/*@GetMapping("/players")
-	//@PreAuthorize("hasAuthority('player:admin')")
-	public ResponseEntity<List<PlayerDto>> showPlayers() throws Exception {
-		List<PlayerDto> playersWithSR = playerS.findAllPlayers().stream().map(p -> {
-			try {
-				return this.getPlayerById(p.getId()).getBody();
-			} catch (Exception e) {
-			}
-			return null;
-		}).collect(Collectors.toList());
-
-		return new ResponseEntity<>(playersWithSR, HttpStatus.OK);
-	}*/
 }

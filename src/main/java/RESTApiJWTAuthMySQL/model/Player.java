@@ -2,7 +2,6 @@ package RESTApiJWTAuthMySQL.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,9 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -30,6 +26,9 @@ public class Player {
 	@Column (name = "player_name")
 	private String playerName;
 	
+	@Column (name = "password")
+	private String password;
+	
 	@CreationTimestamp
 	//@Temporal(TemporalType.DATE)	
 	@Column (name = "registration_date", updatable = false)
@@ -42,9 +41,10 @@ public class Player {
 		
 	}  
 	
-	public Player(Long playerId, String playerName, LocalDateTime registrationDate) {
+	public Player(Long playerId, String playerName, String password, LocalDateTime registrationDate) {
 		this.playerId=playerId;
 		this.playerName = playerName;
+		this.password = password;
 		this.registrationDate = LocalDateTime.now();
 	}
 	
@@ -62,6 +62,14 @@ public class Player {
 
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public LocalDateTime getRegistrationDate() {
@@ -88,13 +96,13 @@ public class Player {
 	    if (!(o instanceof Player))
 	      return false;
 	    Player player = (Player) o;
-	    return Objects.equals(this.playerId, player.playerId) && Objects.equals(this.playerName, player.playerName)
-	        && Objects.equals(this.registrationDate, player.registrationDate);
+	    return Objects.equals(this.playerId, player.playerId) && Objects.equals(this.playerName, player.playerName) 
+	    		&& Objects.equals(this.password, player.password) && Objects.equals(this.registrationDate, player.registrationDate);
 	  }
 
 	  @Override
 	  public int hashCode() {
-	    return Objects.hash(this.playerId, this.playerName, this.registrationDate);
+	    return Objects.hash(this.playerId, this.playerName, this.password, this.registrationDate);
 	  }
 
 	  @Override

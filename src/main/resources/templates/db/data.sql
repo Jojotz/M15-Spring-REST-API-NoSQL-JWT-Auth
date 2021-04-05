@@ -1,7 +1,7 @@
-INSERT INTO `Player` (player_id, player_name, registration_date) 
+INSERT INTO `Player` (player_id, player_name, password, registration_date) 
 VALUES
-  	(NULL,'John', '2021-03-30 14:14:00'),
-  	(NULL,'Munchkin', '2021-03-30 14:14:00');
+  	(NULL,'John', 'independenceday', '2021-03-30 14:14:00'),
+  	(NULL,'Munchkin', 'lunalunera', '2021-03-30 14:14:00');
 
 INSERT INTO 
 	`DiceRoll` (diceRoll_id, d1, d2, result, diceRoll_registration, player_id) 

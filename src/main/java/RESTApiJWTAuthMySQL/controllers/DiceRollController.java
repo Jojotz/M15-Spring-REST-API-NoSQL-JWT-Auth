@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,9 +35,6 @@ public class DiceRollController {
 	    this.repository = repository;
 	    this.assembler = assembler;
 	}
-	
-	//@Autowired
-	//PlayerService playerService;
 		
 	@GetMapping("/dicerolls/")
 	public CollectionModel<EntityModel<DiceRoll>> all() {
@@ -49,7 +45,7 @@ public class DiceRollController {
 	  return CollectionModel.of(dicerolls, linkTo(methodOn(DiceRollController.class).all()).withSelfRel());
 	}
 	
-	@GetMapping("/dicerolls/{id}")
+	@GetMapping("/dicerolls/{diceRollId}")
 	public EntityModel<DiceRoll> one(@PathVariable Long diceRollId) {
 
 		DiceRoll diceroll = repository.findById(diceRollId).orElseThrow(() -> new DiceRollNotFoundException(diceRollId));
@@ -87,7 +83,7 @@ public class DiceRollController {
 	      .body(entityModel);
 	}*/
 	
-	@DeleteMapping("/dicerolls/{id}")
+	@DeleteMapping("/dicerolls/{diceRollId}")
 	public ResponseEntity<?> deleteDiceRolls(@PathVariable Long diceRollId) {
 
 		  repository.deleteById(diceRollId);

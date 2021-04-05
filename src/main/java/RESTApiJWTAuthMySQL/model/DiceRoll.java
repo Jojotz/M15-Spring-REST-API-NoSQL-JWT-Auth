@@ -1,5 +1,6 @@
 package RESTApiJWTAuthMySQL.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -34,9 +35,9 @@ public class DiceRoll {
 	private String result;
 	
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	@Column (name = "diceRoll_registration", updatable = false)
-	private Date diceRollRegistration;
+	private LocalDateTime diceRollRegistration;
 		
 	@ManyToOne
 	@JoinColumn(name ="player_id", nullable=false)
@@ -46,7 +47,7 @@ public class DiceRoll {
 		
 	}
 	
-	public DiceRoll(Long diceRollId, int d1, int d2, String result, Date diceRollRegistration) {
+	public DiceRoll(Long diceRollId, int d1, int d2, String result, LocalDateTime diceRollRegistration) {
 		this.diceRollId = diceRollId;
 		this.d1 = d1;
 		this.d2 = d2;
@@ -81,12 +82,13 @@ public class DiceRoll {
 		this.result = result;
 	}
 	
-	public Date getDiceRollRegistration() {
+	public LocalDateTime getDiceRollRegistration() {
 		return diceRollRegistration;
 	}
-	public void setDiceRollRegistration(Date diceRollRegistration) {
+	
+	/*public void setDiceRollRegistration(LocalDateTime diceRollRegistration) {
 		this.diceRollRegistration = diceRollRegistration;
-	}
+	}*/
 
 	public Player getPlayer() {
 		return player;
