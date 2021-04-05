@@ -1,8 +1,8 @@
 package RESTApiJWTAuthMySQL.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -49,11 +46,43 @@ public class DiceRoll {
 	
 	public DiceRoll(Long diceRollId, int d1, int d2, String result, LocalDateTime diceRollRegistration) {
 		this.diceRollId = diceRollId;
-		this.d1 = d1;
-		this.d2 = d2;
-		this.result = result;
-		this.diceRollRegistration = diceRollRegistration;
+		this.d1 = (int) Math.random() * 7;
+		this.d2 = (int) Math.random() * 7;
+		this.result = Result();
+		this.diceRollRegistration = LocalDateTime.now();
 	}
+	
+	public DiceRoll(Optional<Player> playerThrowing) {
+		this.d1 = (int) Math.random() * 7;
+		this.d2 = (int) Math.random() * 7;
+		this.result = Result();
+		this.diceRollRegistration = LocalDateTime.now();
+	}
+
+	public String Result ()  {
+		
+		String result;
+		
+		if (this.getD1() + this.getD2() == 7) {
+			result ="WIN";
+		} else {
+			result ="LOSS";
+		}		
+		return result;
+	}	
+	
+/*	public RollDices (Optional<Player> playerThrowing) {
+		this.setD1((int) Math.random() * 7);
+		this.setD2((int) Math.random() * 7);
+		
+		if (this.getD1() + this.getD2() == 7) {
+			this.setResult("WIN");
+		} else {
+			this.setResult("LOSS");
+		}
+		
+		return this.RollDices(playerThrowing);
+	} */
 	
 	public Long getDiceRollId() {
 		return diceRollId;

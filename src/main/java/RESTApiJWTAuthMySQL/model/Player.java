@@ -80,11 +80,11 @@ public class Player {
 		this.registrationDate = registrationDate;
 	}
 */
-	public List<DiceRoll> getRolls() {
+	public List<DiceRoll> getDiceRolls() {
 		return diceRolls;
 	}
 
-	public void setRolls(List<DiceRoll> diceRolls) {
+	public void setDiceRolls(List<DiceRoll> diceRolls) {
 		this.diceRolls = diceRolls;
 	}	
 	
@@ -97,7 +97,8 @@ public class Player {
 	      return false;
 	    Player player = (Player) o;
 	    return Objects.equals(this.playerId, player.playerId) && Objects.equals(this.playerName, player.playerName) 
-	    		&& Objects.equals(this.password, player.password) && Objects.equals(this.registrationDate, player.registrationDate);
+	    		&& Objects.equals(this.password, player.password) && Objects.equals(this.registrationDate, player.registrationDate)
+	    		&& Objects.equals(this.diceRolls, player.diceRolls);
 	  }
 
 	  @Override

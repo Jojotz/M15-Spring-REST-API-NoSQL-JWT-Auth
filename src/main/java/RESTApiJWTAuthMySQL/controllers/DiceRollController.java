@@ -1,16 +1,9 @@
 package RESTApiJWTAuthMySQL.controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,14 +29,14 @@ public class DiceRollController {
 	    this.assembler = assembler;
 	}
 		
-	@GetMapping("/dicerolls/")
+	/*@GetMapping("/players/{playerId}/games")
 	public CollectionModel<EntityModel<DiceRoll>> all() {
 
-	  List<EntityModel<DiceRoll>> dicerolls = repository.findAll().stream().map
+	  List<EntityModel<DiceRoll>> dicerolls = repository.findById(playerId)    stream().map
 			  (assembler::toModel).collect(Collectors.toList());
 
 	  return CollectionModel.of(dicerolls, linkTo(methodOn(DiceRollController.class).all()).withSelfRel());
-	}
+	}*/
 	
 	@GetMapping("/dicerolls/{diceRollId}")
 	public EntityModel<DiceRoll> one(@PathVariable Long diceRollId) {
@@ -73,8 +66,7 @@ public class DiceRollController {
 	      }) //
 	      .orElseGet(() -> {
 	    	  newPlayer.setPlayerId(playerId);
-	        return repository.save(newPlayer);
-	      });
+	        return repository.save(newPlayer);});
 
 	  EntityModel<Player> entityModel = assembler.toModel(updatedPlayer);
 
@@ -83,11 +75,11 @@ public class DiceRollController {
 	      .body(entityModel);
 	}*/
 	
-	@DeleteMapping("/dicerolls/{diceRollId}")
-	public ResponseEntity<?> deleteDiceRolls(@PathVariable Long diceRollId) {
+	/*@DeleteMapping("/players/{playerId}/games")
+	public ResponseEntity<?> deleteDiceRolls(@PathVariable Long playerId) {
 
-		  repository.deleteById(diceRollId);
+		  repository.deleteAll();
 
 		  return ResponseEntity.noContent().build();
-	}
+	}*/
 }

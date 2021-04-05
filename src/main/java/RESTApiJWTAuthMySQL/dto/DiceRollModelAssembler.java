@@ -12,22 +12,13 @@ import RESTApiJWTAuthMySQL.model.DiceRoll;
 @Component
 public class DiceRollModelAssembler implements RepresentationModelAssembler<DiceRoll, EntityModel<DiceRoll>> {
 
-  @Override
-  public EntityModel<DiceRoll> toModel(DiceRoll diceroll) {
+	public EntityModel<DiceRoll> toModel(DiceRoll diceroll) {
+	
+	EntityModel<DiceRoll> diceRollModel = EntityModel.of(diceroll,
+			linkTo(methodOn(DiceRollController.class).one(diceroll.getDiceRollId())).withSelfRel());
+	        //linkTo(methodOn(PlayerController.class).allThrows(playerId)).withRel("dicerolls"));
+	
+	   return diceRollModel;
+	}
 
-    // Unconditional links to single-item resource and aggregate root
-
-    EntityModel<DiceRoll> diceRollModel = EntityModel.of(diceroll,
-        linkTo(methodOn(DiceRollController.class).one(diceroll.getDiceRollId())).withSelfRel(),
-        linkTo(methodOn(DiceRollController.class).all()).withRel("dicerolls"));
-
-    // Conditional links based on state of the order
-
-    /*if (diceroll.getStatus() == Status.IN_PROGRESS) {
-      orderModel.add(linkTo(methodOn(OrderController.class).cancel(order.getId())).withRel("cancel"));
-      orderModel.add(linkTo(methodOn(OrderController.class).complete(order.getId())).withRel("complete"));
-    }*/
-
-    return diceRollModel;
-  }
 }
