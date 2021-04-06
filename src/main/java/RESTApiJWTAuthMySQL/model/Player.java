@@ -30,11 +30,11 @@ public class Player {
 	private String password;
 	
 	@CreationTimestamp
-	//@Temporal(TemporalType.DATE)	
 	@Column (name = "registration_date", updatable = false)
 	private LocalDateTime registrationDate;
 	
 	@OneToMany (mappedBy="player", cascade = CascadeType.ALL, orphanRemoval=true)
+	//@JoinColumn(name ="diceRoll_id", nullable=false)
 	private List<DiceRoll> diceRolls = new ArrayList<>();
 	
 	public Player() {

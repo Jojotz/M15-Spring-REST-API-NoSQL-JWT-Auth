@@ -107,7 +107,7 @@ public class PlayerController {
 	  
 	}
 	
-	//Creates a throw
+	//Creates a diceroll
 	@PostMapping(path="/players/{playerId}/games") 
 	public ResponseEntity<EntityModel<DiceRoll>> newThrow(@PathVariable(name = "playerId") Long playerId) {
 				

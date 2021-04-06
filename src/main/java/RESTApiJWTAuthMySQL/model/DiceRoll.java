@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -32,7 +33,6 @@ public class DiceRoll {
 	private String result;
 	
 	@CreationTimestamp
-	//@Temporal(TemporalType.TIMESTAMP)
 	@Column (name = "diceRoll_registration", updatable = false)
 	private LocalDateTime diceRollRegistration;
 		
@@ -44,19 +44,20 @@ public class DiceRoll {
 		
 	}
 	
-	public DiceRoll(Long diceRollId, int d1, int d2, String result, LocalDateTime diceRollRegistration) {
+/*	public DiceRoll(Long diceRollId, int d1, int d2, String result, LocalDateTime diceRollRegistration) {
 		this.diceRollId = diceRollId;
 		this.d1 = (int) Math.random() * 7;
 		this.d2 = (int) Math.random() * 7;
 		this.result = Result();
 		this.diceRollRegistration = LocalDateTime.now();
-	}
+	}*/
 	
 	public DiceRoll(Optional<Player> playerThrowing) {
-		this.d1 = (int) Math.random() * 7;
-		this.d2 = (int) Math.random() * 7;
+		this.d1 = (int) (Math.random() * 7);
+		this.d2 = (int) (Math.random() * 7);
 		this.result = Result();
 		this.diceRollRegistration = LocalDateTime.now();
+		this.player = playerThrowing.get();
 	}
 
 	public String Result ()  {

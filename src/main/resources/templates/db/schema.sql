@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `DiceRoll` (
   `d2` INT(55),
   `result` VARCHAR(45),
   `diceRoll_registration` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `player_id` BIGINT);
+  `player_id` BIGINT NOT NULL);
   
 ALTER TABLE DiceRoll
 ADD constraint FK_PLAYER_ID  FOREIGN KEY (player_id) 
