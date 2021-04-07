@@ -1,5 +1,6 @@
 package RESTApiJWTAuthMySQL.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
-@Table(name = "Player")
-public class Player {
+@Table(name = "PLAYER")
+public class Player implements Serializable {
 
 	@Id
+	@Column(name = "player_Id")
 	@GeneratedValue (strategy = GenerationType.IDENTITY)	
 	private Long playerId;
 	
@@ -34,7 +38,7 @@ public class Player {
 	private LocalDateTime registrationDate;
 	
 	@OneToMany (mappedBy="player", cascade = CascadeType.ALL, orphanRemoval=true)
-	//@JoinColumn(name ="diceRoll_id", nullable=false)
+	@JsonManagedReference
 	private List<DiceRoll> diceRolls = new ArrayList<>();
 	
 	public Player() {

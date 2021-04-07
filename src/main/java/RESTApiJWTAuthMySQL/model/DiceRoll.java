@@ -1,6 +1,6 @@
 package RESTApiJWTAuthMySQL.model;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -11,15 +11,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table (name = "DiceRoll")
-public class DiceRoll {
+@Table (name = "DICEROLL")
+public class DiceRoll implements Serializable {
 
 	@Id
+	@Column (name = "diceRoll_Id")
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long diceRollId;
 	
@@ -31,13 +32,10 @@ public class DiceRoll {
 	
 	@Column (name = "result")
 	private String result;
-	
-	@CreationTimestamp
-	@Column (name = "diceRoll_registration", updatable = false)
-	private LocalDateTime diceRollRegistration;
-		
+			
 	@ManyToOne
 	@JoinColumn(name ="player_id", nullable=false)
+	@JsonBackReference
 	private Player player;
 	
 	public DiceRoll() {
@@ -52,12 +50,11 @@ public class DiceRoll {
 		this.diceRollRegistration = LocalDateTime.now();
 	}*/
 	
-	public DiceRoll(Optional<Player> playerThrowing) {
+	public DiceRoll(Player playerThrowing) {
 		this.d1 = (int) (Math.random() * 7);
 		this.d2 = (int) (Math.random() * 7);
 		this.result = Result();
-		this.diceRollRegistration = LocalDateTime.now();
-		this.player = playerThrowing.get();
+		this.player = playerThrowing;
 	}
 
 	public String Result ()  {
@@ -112,14 +109,6 @@ public class DiceRoll {
 		this.result = result;
 	}
 	
-	public LocalDateTime getDiceRollRegistration() {
-		return diceRollRegistration;
-	}
-	
-	/*public void setDiceRollRegistration(LocalDateTime diceRollRegistration) {
-		this.diceRollRegistration = diceRollRegistration;
-	}*/
-
 	public Player getPlayer() {
 		return player;
 	}
@@ -137,19 +126,18 @@ public class DiceRoll {
 	      return false;
 	    DiceRoll diceroll = (DiceRoll) o;
 	    return Objects.equals(this.diceRollId, diceroll.diceRollId) && Objects.equals(this.d1, diceroll.d1)
-	        && Objects.equals(this.d2, diceroll.d2) && Objects.equals(this.result, diceroll.result) 
-	        && Objects.equals(this.diceRollRegistration, diceroll.diceRollRegistration) ;
+	        && Objects.equals(this.d2, diceroll.d2) && Objects.equals(this.result, diceroll.result);
 	  }
 
 	  @Override
 	  public int hashCode() {
-	    return Objects.hash(this.diceRollId, this.d1, this.d2, this.result, this.diceRollRegistration);
+	    return Objects.hash(this.diceRollId, this.d1, this.d2, this.result);
 	  }
 
 	  @Override
 	  public String toString() {
 	    return "DiceRoll{" + "id=" + this.diceRollId + ", dice1='" + this.d1 + '\'' + ", dice2='" + this.d2 + '\'' 
-	    		+ ", result='" + this.result + ", date of registration='" + this.diceRollRegistration + '\'' + '}';
+	    		+ ", result='" + this.result + '\'' + '}';
 	  }
 	
 }
