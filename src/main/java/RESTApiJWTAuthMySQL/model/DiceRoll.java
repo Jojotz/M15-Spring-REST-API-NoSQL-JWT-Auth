@@ -2,8 +2,6 @@ package RESTApiJWTAuthMySQL.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Optional;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,18 +36,8 @@ public class DiceRoll implements Serializable {
 	@JsonBackReference
 	private Player player;
 	
-	public DiceRoll() {
+	public DiceRoll() {	}
 		
-	}
-	
-/*	public DiceRoll(Long diceRollId, int d1, int d2, String result, LocalDateTime diceRollRegistration) {
-		this.diceRollId = diceRollId;
-		this.d1 = (int) Math.random() * 7;
-		this.d2 = (int) Math.random() * 7;
-		this.result = Result();
-		this.diceRollRegistration = LocalDateTime.now();
-	}*/
-	
 	public DiceRoll(Player playerThrowing) {
 		this.d1 = (int) (Math.random() * 7);
 		this.d2 = (int) (Math.random() * 7);
@@ -68,19 +56,6 @@ public class DiceRoll implements Serializable {
 		}		
 		return result;
 	}	
-	
-/*	public RollDices (Optional<Player> playerThrowing) {
-		this.setD1((int) Math.random() * 7);
-		this.setD2((int) Math.random() * 7);
-		
-		if (this.getD1() + this.getD2() == 7) {
-			this.setResult("WIN");
-		} else {
-			this.setResult("LOSS");
-		}
-		
-		return this.RollDices(playerThrowing);
-	} */
 	
 	public Long getDiceRollId() {
 		return diceRollId;
@@ -118,26 +93,25 @@ public class DiceRoll implements Serializable {
 	}	
 	
 	@Override
-	  public boolean equals(Object o) {
+	public boolean equals(Object o) {
 
-	    if (this == o)
-	      return true;
+		if (this == o)
+			return true;
 	    if (!(o instanceof DiceRoll))
-	      return false;
+	    	return false;
 	    DiceRoll diceroll = (DiceRoll) o;
 	    return Objects.equals(this.diceRollId, diceroll.diceRollId) && Objects.equals(this.d1, diceroll.d1)
 	        && Objects.equals(this.d2, diceroll.d2) && Objects.equals(this.result, diceroll.result);
-	  }
+	 }
 
-	  @Override
-	  public int hashCode() {
-	    return Objects.hash(this.diceRollId, this.d1, this.d2, this.result);
-	  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.diceRollId, this.d1, this.d2, this.result);
+	}
 
-	  @Override
-	  public String toString() {
-	    return "DiceRoll{" + "id=" + this.diceRollId + ", dice1='" + this.d1 + '\'' + ", dice2='" + this.d2 + '\'' 
+	@Override
+	public String toString() {
+		return "DiceRoll{" + "id=" + this.diceRollId + ", dice1='" + this.d1 + '\'' + ", dice2='" + this.d2 + '\'' 
 	    		+ ", result='" + this.result + '\'' + '}';
-	  }
-	
+	}
 }

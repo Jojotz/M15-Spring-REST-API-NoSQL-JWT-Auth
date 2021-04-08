@@ -25,6 +25,7 @@ import RESTApiJWTAuthMySQL.model.DiceRoll;
 import RESTApiJWTAuthMySQL.model.Player;
 import RESTApiJWTAuthMySQL.repositories.DiceRollRepository;
 import RESTApiJWTAuthMySQL.repositories.PlayerRepository;
+import RESTApiJWTAuthMySQL.exceptions.DiceRollNotFoundException;
 import RESTApiJWTAuthMySQL.exceptions.PlayerNotFoundException;
 import RESTApiJWTAuthMySQL.dto.DiceRollModelAssembler;
 import RESTApiJWTAuthMySQL.dto.PlayerModelAssembler;
@@ -65,10 +66,16 @@ public class PlayerController {
 	public CollectionModel<DiceRoll> getAllDiceThrows(@PathVariable(name = "playerId") Long playerId) {
 	    		
 		List<DiceRoll> dicerolls = playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId)).getDiceRolls();
-		
 	    Link link = linkTo(methodOn(PlayerController.class).getAllDiceThrows(playerId)).withSelfRel();
-	    CollectionModel<DiceRoll> result = CollectionModel.of(dicerolls, link);
-	    return result;
+	    
+	    if (dicerolls.isEmpty()) {
+	    	throw new DiceRollNotFoundException(playerId);	    	
+	    } else {
+	    	
+		    CollectionModel<DiceRoll> result = CollectionModel.of(dicerolls, link);
+		    
+		    return result;
+	    }
 	}
 	
 	//Creates a player
@@ -97,7 +104,9 @@ public class PlayerController {
 				
 		Player playerThrowing= playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 		DiceRoll newDiceRoll = new DiceRoll (playerThrowing);
-					
+		playerThrowing.getDiceRolls().add(newDiceRoll);
+		playerThrowing.setWinRate(playerThrowing.calculateWinRate(playerThrowing));
+			
 		EntityModel<DiceRoll> entityModel = diceRollAssembler.toModel(diceRollRepository.save(newDiceRoll));
 			
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -134,6 +143,9 @@ public class PlayerController {
 		List <DiceRoll> diceRolls = diceRollRepository.findDiceRollsByPlayer(player);
 		
 		diceRollRepository.deleteInBatch(diceRolls);
+		
+		player.setWinRate(0.0);
+		playerRepository.save(player);
 		
 		return ResponseEntity.noContent().build();
 	}

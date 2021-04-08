@@ -14,11 +14,10 @@ public class DiceRollModelAssembler implements RepresentationModelAssembler<Dice
 
 	public EntityModel<DiceRoll> toModel(DiceRoll diceroll) {
 	
-	EntityModel<DiceRoll> diceRollModel = EntityModel.of(diceroll,
+		EntityModel<DiceRoll> diceRollModel = EntityModel.of(diceroll,
 			linkTo(methodOn(DiceRollController.class).one(diceroll.getDiceRollId())).withSelfRel());
 	        //linkTo(methodOn(PlayerController.class).allThrows(playerId)).withRel("dicerolls"));
 	
-	   return diceRollModel;
+		return diceRollModel;
 	}
-
 }

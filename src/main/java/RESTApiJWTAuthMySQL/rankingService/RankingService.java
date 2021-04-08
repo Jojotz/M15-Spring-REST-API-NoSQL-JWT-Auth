@@ -1,15 +1,22 @@
 package RESTApiJWTAuthMySQL.rankingService;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.function.EntityResponse;
 
 @Service
-public class RankingService {
+public class RankingService { //extends PlayerRepository {
 
-	public EntityResponse percentageOfVictoriesForAllRounds() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+	//public static final PlayerRepository playerRepository = null;
+
+/*	public default BigDecimal calculateWinRate(Long playerId) {
+		
+		int dicerolls =	playerRepository.findById(playerId).get().getDiceRolls().size();
+		int wins = (int) playerRepository.findById(playerId).get().getDiceRolls().stream()
+				.filter(t -> t.getResult() =="WIN").count();
+		
+		BigDecimal winRate =  BigDecimal.valueOf((wins/dicerolls)*100) ;
+		
+		return winRate;
+		
+	}*/
 	
 }

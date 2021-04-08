@@ -33,6 +33,9 @@ public class Player implements Serializable {
 	@Column (name = "password")
 	private String password;
 	
+	@Column (name = "win_rate")  //, precision = 5, scale =2
+	private double winRate;
+	
 	@CreationTimestamp
 	@Column (name = "registration_date", updatable = false)
 	private LocalDateTime registrationDate;
@@ -51,7 +54,7 @@ public class Player implements Serializable {
 		this.password = password;
 		this.registrationDate = LocalDateTime.now();
 	}
-	
+
 	public Long getPlayerId() {
 		return playerId;
 	}
@@ -76,6 +79,14 @@ public class Player implements Serializable {
 		this.password = password;
 	}
 
+	public double getWinRate() {
+		return winRate;
+	}
+
+	public void setWinRate(double winRate) {
+		this.winRate = winRate;
+	}
+
 	public LocalDateTime getRegistrationDate() {
 		return registrationDate;
 	}
@@ -91,27 +102,39 @@ public class Player implements Serializable {
 	public void setDiceRolls(List<DiceRoll> diceRolls) {
 		this.diceRolls = diceRolls;
 	}	
-	
+
 	@Override
-	  public boolean equals(Object o) {
+	public boolean equals(Object o) {
 
-	    if (this == o)
-	      return true;
-	    if (!(o instanceof Player))
-	      return false;
-	    Player player = (Player) o;
-	    return Objects.equals(this.playerId, player.playerId) && Objects.equals(this.playerName, player.playerName) 
-	    		&& Objects.equals(this.password, player.password) && Objects.equals(this.registrationDate, player.registrationDate)
-	    		&& Objects.equals(this.diceRolls, player.diceRolls);
-	  }
+		if (this == o)
+			return true;
+		if (!(o instanceof Player))
+			return false;
+		Player player = (Player) o;
+		return Objects.equals(this.playerId, player.playerId) && Objects.equals(this.playerName, player.playerName) 
+    		&& Objects.equals(this.password, player.password) && Objects.equals(this.winRate, player.winRate)
+    		&& Objects.equals(this.registrationDate, player.registrationDate)
+    		&& Objects.equals(this.diceRolls, player.diceRolls);
+	}
 
-	  @Override
-	  public int hashCode() {
-	    return Objects.hash(this.playerId, this.playerName, this.password, this.registrationDate);
-	  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.playerId, this.playerName, this.password, this.registrationDate);
+	}
 
-	  @Override
-	  public String toString() {
-	    return "Player{" + "id=" + this.playerId + ", name='" + this.playerName + '\'' + ", date of registration='" + this.registrationDate + '\'' + '}';
-	  }
+	@Override
+	public String toString() {
+	   	return "Player{" + "id=" + this.playerId + ", name='" + this.playerName + '\'' + ", date of registration='" + this.registrationDate + '\'' + '}';
+	}
+
+	public double calculateWinRate(Player playerThrowing) {
+		
+		double dicerolls = playerThrowing.getDiceRolls().size();
+		double wins = (double) playerThrowing.getDiceRolls().stream()
+				.filter(w -> w.getResult().equals("WIN")).count();
+		
+		double winRate =  (wins/dicerolls)*100;
+		
+		return winRate;
+	}
 }
