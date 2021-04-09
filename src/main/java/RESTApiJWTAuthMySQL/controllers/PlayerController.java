@@ -1,5 +1,6 @@
 package RESTApiJWTAuthMySQL.controllers;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import RESTApiJWTAuthMySQL.model.DiceRoll;
 import RESTApiJWTAuthMySQL.model.Player;
+import RESTApiJWTAuthMySQL.model.Ranking;
 import RESTApiJWTAuthMySQL.repositories.DiceRollRepository;
 import RESTApiJWTAuthMySQL.repositories.PlayerRepository;
 import RESTApiJWTAuthMySQL.exceptions.DiceRollNotFoundException;
 import RESTApiJWTAuthMySQL.exceptions.PlayerNotFoundException;
 import RESTApiJWTAuthMySQL.dto.DiceRollModelAssembler;
 import RESTApiJWTAuthMySQL.dto.PlayerModelAssembler;
+import RESTApiJWTAuthMySQL.dto.RankingModelAssembler;
 
 @RestController
 public class PlayerController {
@@ -42,12 +45,16 @@ public class PlayerController {
 	private DiceRollRepository diceRollRepository;
 	@Autowired
 	private DiceRollModelAssembler diceRollAssembler;
+	
+	@Autowired
+	private RankingModelAssembler rankingAssembler;
 		
 	//Gets all players
 	@GetMapping("/players/")
 	public CollectionModel<EntityModel<Player>> all() {
 
-		List<EntityModel<Player>> players = playerRepository.findAll().stream().map(playerAssembler::toModel).collect(Collectors.toList());
+		List<EntityModel<Player>> players = playerRepository.findAll().stream()
+				.map(playerAssembler::toModel).collect(Collectors.toList());
 
 		return CollectionModel.of(players, linkTo(methodOn(PlayerController.class).all()).withSelfRel());
 	}
@@ -65,7 +72,8 @@ public class PlayerController {
 	@GetMapping(value = "/players/{playerId}/games", produces = { "application/hal+json" })
 	public CollectionModel<DiceRoll> getAllDiceThrows(@PathVariable(name = "playerId") Long playerId) {
 	    		
-		List<DiceRoll> dicerolls = playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId)).getDiceRolls();
+		List<DiceRoll> dicerolls = playerRepository.findById(playerId).orElseThrow(() 
+				-> new PlayerNotFoundException(playerId)).getDiceRolls();
 	    Link link = linkTo(methodOn(PlayerController.class).getAllDiceThrows(playerId)).withSelfRel();
 	    
 	    if (dicerolls.isEmpty()) {
@@ -158,6 +166,44 @@ public class PlayerController {
 		playerRepository.deleteById(playerId);
 
 		return ResponseEntity.noContent().build();
+	}
+	
+	//Gets average WinRate for all the players
+	@GetMapping("/players/ranking") 
+	public ResponseEntity<EntityModel<Ranking>> averageWinRate() {
+		
+		double diceRolls = (double) playerRepository.findAll().stream().count();
+		double winRatessum = playerRepository.findAll().stream()
+				.collect(Collectors.summingDouble(Player::getWinRate)); 
+		
+		Ranking avRanking = new Ranking(winRatessum/diceRolls);
+		
+		EntityModel<Ranking> entityModel = rankingAssembler.toModel(avRanking);		
+		
+		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF)
+				.toUri()).body(entityModel);			
+	}
+	
+	//Gets the player with the worst WinRate
+	@GetMapping("/players/ranking/loser") 
+	public EntityModel<Player> loserPlayer() {
+		
+		Player loserPlayer = playerRepository.findAll().stream()
+				.min(Comparator.comparing(Player::getWinRate)).get();	
+	
+		return playerAssembler.toModel(loserPlayer);	
+		
+	}
+	
+	//Gets the player with the best WinRate
+	@GetMapping("/players/ranking/winner") 
+	public EntityModel<Player> winnerPlayer() {
+		
+		Player winnerPlayer = playerRepository.findAll().stream()
+				.max(Comparator.comparing(Player::getWinRate)).get();	
+	
+		return playerAssembler.toModel(winnerPlayer);	
+		
 	}
 	
 }
