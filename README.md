@@ -1,7 +1,7 @@
 # M15-Spring-REST-API-NoSQL-JWT-Auth
 
 ## Description
-REST API that simulates a dice game where players roll 2 dice in each roll, if the outcome is 7 then it is a Win, otherwise it is a Loss. Also manages the ranking of all the players (including the "anonymoues ones) with all CRUD functionalities. Data is persisted through MySQL with relationships, the initial data has been uploaded from two sql files.
+REST API that simulates a dice game where players roll 2 dice in each roll, if the outcome is 7 then it is a Win, otherwise it is a Loss. Also manages the ranking of all the players (including the "anonymous ones) with all CRUD functionalities. Data is persisted through MySQL with relationships, the initial data has been uploaded from two sql files.
 
 ## Expected Performance
 ![Get player](https://user-images.githubusercontent.com/67835708/117438644-1de98180-af32-11eb-9dbd-53fa9d304af1.jpg)
